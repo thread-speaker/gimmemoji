@@ -24,12 +24,31 @@ function saveCustomEmojis(emojiBlob) {
   });
 };
 
+// Copying requires a visible, mounted text input.
+function copyToClipboard(text) {
+  var input = document.createElement('input');
+  input.style.opacity = 0;
+  document.body.appendChild(input);
+
+  input.value = text;
+  input.focus();
+  input.select();
+
+  // Copying can fail on occasion.
+  try {
+    document.execCommand('copy');
+  } catch (error) {}
+
+  input.remove();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   getCustomEmojis(function (customEmoji) {
     var completeEmojiList = EMOJILIST.concat(customEmoji);
     var randomEmoji = pickEmoji(completeEmojiList);
     var emojiDiv = document.getElementById('emoji');
     emojiDiv.innerHTML = randomEmoji;
+    copyToClipboard(randomEmoji);
   });
 });
 
